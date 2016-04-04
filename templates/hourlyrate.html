@@ -5,10 +5,12 @@ Hours Worked
 {% block content %}
 {% macro render_field(field) %}
 <div class="form-group">
-	{% if field.name != "submit" %}
-	{{ field.label }}
-	{% endif %}
-	{{ field(class="form-control") }}
+    {% if field.name != "submit" %}
+        {{ field.label }}
+        {{ field(class="form-control") }}   
+    {% else %}
+       {{ field(class="btn btn-primary") }}
+    {% endif %}
 </div>
 {% endmacro %}
 
@@ -26,8 +28,11 @@ Hours Worked
                         
                     </h2>
                     <hr>
+                    <div class="jumbotron">
+            {{ result }}
+          </div>
           
-<form method="POST"  enctype="multipart/form-data" >
+<form method="POST"  enctype="multipart/form-data">
 				{{ render_field(form.hours_worked) }}
 				{{ render_field(form.hourly_rate) }}
 				{{ render_field(form.submit)}}
@@ -35,6 +40,7 @@ Hours Worked
 		
 
 			</form>
+                
                  
                 </div>
             
