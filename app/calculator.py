@@ -79,10 +79,10 @@ class FreelanceEntry:
 			self.hours = float(kwargs['hours'])
 		else:
 			raise ValueError(kwargs)
-		self.regular   =   {'hours':'{:20,.2f}'.format(regular_hours())   , 'pay':'{:20,.2f}'.format(regular_pay()), 	'rate': '{:20,.2f}'.format(self.hourly_rate)}
-		self.overtime   =  {'hours':'{:20,.2f}'.format(overtime_hours())  , 'pay':'{:20,.2f}'.format(overtime_pay()), 	'rate': '{:20,.2f}'.format(self.hourly_rate * 1.5)}
-		self.doubletime =  {'hours':'{:20,.2f}'.format(doubletime_hours()), 'pay':'{:20,.2f}'.format(doubletime_pay()), 'rate': '{:20,.2f}'.format(self.hourly_rate * 2)}
+		self.regular   =   {'hours':'{:,.2f}'.format(regular_hours())   , 'pay':'{:20,.2f}'.format(regular_pay()), 	'rate': '{:20,.2f}'.format(self.hourly_rate)}
+		self.overtime   =  {'hours':'{:,.2f}'.format(overtime_hours())  , 'pay':'{:20,.2f}'.format(overtime_pay()), 	'rate': '{:20,.2f}'.format(self.hourly_rate * 1.5)}
+		self.doubletime =  {'hours':'{:,.2f}'.format(doubletime_hours()), 'pay':'{:20,.2f}'.format(doubletime_pay()), 'rate': '{:20,.2f}'.format(self.hourly_rate * 2)}
 		self.total = {
-			'hours': '{:20,.2f}'.format(regular_hours() + overtime_hours() + doubletime_hours()),
-			'pay': '{:20,.2f}'.format(regular_pay() + overtime_pay() + doubletime_pay())
+			'hours': '{:,.2f}'.format(regular_hours() + overtime_hours() + doubletime_hours()),
+			'pay': '{:,.2f}'.format(regular_pay() + overtime_pay() + doubletime_pay())
 		}

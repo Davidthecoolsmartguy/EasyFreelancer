@@ -29,6 +29,13 @@ def create_app():
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
     security = Security(app, user_datastore)
 
+
+    # Import modules here
+    from app.mod_api.api import api_mod as api_module
+    app.register_blueprint(api_module)
+
+    # Views
+
     # # Create a user to test with
     #@app.before_first_request
     #def create_user():
@@ -36,11 +43,6 @@ def create_app():
     #   user_datastore.create_user(email='matt@nobien.net', password='password')
     #   db.session.commit()
 
-
-
-
-
-    # Views
     @app.route('/')
     @login_required
     def index():
