@@ -7,7 +7,7 @@ Hours Worked
 <div class="form-group">
 	{% if field.name != "submit" %}
 	    {{ field.label }}
-        {{ field(class="form-control") }}   
+        {{ field(**kwargs)|safe }}   
     {% else %}
 	   {{ field(class="btn btn-primary") }}
     {% endif %}
@@ -29,12 +29,46 @@ Hours Worked
                     </h2>
                     <hr>
           <div class="jumbotron">
-            {{ result }}
+                    {% if entry %}
+                    <table class="table table-striped" >
+                    <tr>
+                        <th>Hr. Type</th>
+                        <th class="text-right">Hr/Pay   </th>
+                        <th class="text-right">Hours    </th>
+                        <th class="text-right">Paid     </th>
+                    </tr>
+                    <tr>
+                        <td>Regular</td>
+                        <td class="text-right">{{entry.regular['rate'] }}</td>
+                        <td class="text-right">{{entry.regular['hours']}}</td>
+                        <td class="text-right">{{entry.regular['pay']  }}</td>
+                    </tr>
+                    <tr>
+                        <td>Overtime</td>
+                        <td class="text-right">{{entry.overtime['rate']}}</td>
+                        <td class="text-right">{{entry.overtime['hours']}}</td>
+                        <td class="text-right">{{entry.overtime['pay']}}</td>
+                    </tr>
+                    <tr>
+                        <td>Double time</td>
+                        <td class="text-right">{{entry.doubletime['rate']}}</td>
+                        <td class="text-right">{{entry.doubletime['hours']}}</td>
+                        <td class="text-right">{{entry.doubletime['pay']}}</td>
+                    </tr>
+                    <tr>
+                        <td>Total</td>
+                        <td></td>
+                        <td class="text-right">{{entry.total['hours']}}</td>
+                        <td class="text-right">{{entry.total['pay']}}</td>
+                    </tr>
+                    </table>
+                    {% endif %}
           </div>
 <form method="POST"  enctype="multipart/form-data" >
-				{{ render_field(form.guaranteed_rate) }}
-				{{ render_field(form.guaranteed_hours) }}
-				{{ render_field(form.actual_hours_worked) }}
+                {{ form.csrf_token }}
+				{{ render_field(form.guaranteed_rate,       class="form-control", autocomplete="off") }}
+				{{ render_field(form.guaranteed_hours,      class="form-control", autocomplete="off") }}
+				{{ render_field(form.actual_hours_worked,   class="form-control", autocomplete="off") }}
 				{{ render_field(form.submit)}}
 					
 		

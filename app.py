@@ -6,6 +6,7 @@ from flask.ext.security import Security, SQLAlchemyUserDatastore, \
 
 from flask.ext.mail import Mail
 from forms import GuaranteedHoursForm, HourlyRateForm
+from calculator import FreelanceEntry
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
@@ -20,7 +21,6 @@ def create_app():
     app = Flask(__name__)
     mail = Mail(app)
 
-
     #database setup
     app.config['DEBUG'] = True
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(BASE_DIR, 'app.db')
@@ -30,7 +30,7 @@ def create_app():
     #Flask mail setup
     mail = Mail(app)
     mail.init_app(app)
-    from models import Role, User
+    from models import roles_users, Role, User
     db.init_app(app)
     db.app = app
     app.config.update(dict(
@@ -68,23 +68,30 @@ def create_app():
 
     @app.route('/hourlyrate',methods=['GET','POST'])
     @login_required
-    def hourlyrate():
+    def hourly_rate():
         form = HourlyRateForm(request.form)
-        result = ''
+        entry = None
         if form.validate_on_submit():
-            result = 40
-        return render_template('hourlyrate.html',form = form, result=result)
+            entry = FreelanceEntry(
+                hourly_rate = form.hours_worked.data,
+                hours = form.hours_worked.data,
+                )
+        return render_template('hourlyrate.html',form = form, entry=entry)
 
 
 
     @app.route('/guaranteedhours',methods=['GET','POST'])
     @login_required
-    def guaranteedhours():
+    def guaranteed_hours():
         form = GuaranteedHoursForm(request.form)
-        result = ''
+        entry = None
         if form.validate_on_submit():
-            result = 40
-        return render_template('guaranteedhours.html',form = form, result=result)
+            entry = FreelanceEntry(
+                guaranteed_rate = form.guaranteed_rate.data,
+                guaranteed_hours = form.guaranteed_hours.data,
+                hours_worked = form.actual_hours_worked.data,
+                )
+        return render_template('guaranteedhours.html',form = form, entry=entry)
         
     @app.route('/about')
     def about():
