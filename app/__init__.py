@@ -10,50 +10,31 @@ from calculator import FreelanceEntry
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
-
-
-SECURITY_REGISTERABLE = True
-db = SQLAlchemy()
-
-
 def create_app():
     # Create app
     app = Flask(__name__)
     mail = Mail(app)
-
-    #database setup
-    app.config['DEBUG'] = True
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(BASE_DIR, 'app.db')
-    #Secuirty
-    app.config['SECRET_KEY'] = 'super-secret'
-    app.config['SECURITY_REGISTERABLE'] = True
-    #Flask mail setup
+    app.config.from_object('config')
+    
     mail = Mail(app)
     mail.init_app(app)
-    from models import roles_users, Role, User
+
+    # db instance is created in models.py (for factory pattern)
+    from models import db
     db.init_app(app)
-    db.app = app
-    app.config.update(dict(
-        MAIL_SERVER = 'smtp.gmail.com',
-        MAIL_PORT = 587,
-        MAIL_USE_TLS = True,
-        MAIL_USE_SSL = False,
-        MAIL_USERNAME = 'testingapphere@gmail.com',
-        MAIL_PASSWORD = 'thisisatestpassword',
-    ))
-    # Create database connection object
 
 
     # Setup Flask-Security
+    from models import roles_users, Role, User
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
     security = Security(app, user_datastore)
 
     # # Create a user to test with
     #@app.before_first_request
     #def create_user():
-    #    db.create_all()
-    #    user_datastore.create_user(email='matt@nobien.net', password='password')
-    #    db.session.commit()
+    #   db.create_all()
+    #   user_datastore.create_user(email='matt@nobien.net', password='password')
+    #   db.session.commit()
 
 
 
