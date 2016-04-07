@@ -37,10 +37,11 @@ def create_app():
     # Views
 
     # # Create a user to test with
-    #@app.before_first_request
+    @app.before_first_request
     #def create_user():
     #   db.create_all()
-    #   user_datastore.create_user(email='matt@nobien.net', password='password')
+    #   #user_datastore.create_user(email='matt@nobien.net', password='password')
+    #   user_datastore.create_user(email='8arcena@gmail.com', password='admin')
     #   db.session.commit()
 
     @app.route('/')

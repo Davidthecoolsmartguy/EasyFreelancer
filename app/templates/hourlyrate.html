@@ -2,6 +2,70 @@
 {% block title %}
 Hours Worked
 {% endblock %}
+
+{% block head %}
+{{ super() }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
+<script
+              src="https://code.jquery.com/jquery-2.2.3.min.js"
+              integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="
+              crossorigin="anonymous"></script>
+<script>
+$(function() {
+    var request = {
+        url : '',
+        type: '',
+        //contentType: "application/json",
+        accepts: "application/json",
+        cache: false,
+        dataType: 'json',
+        data: ''
+    };
+    function HRViewModel() {
+        var self = this;
+        self.calculationURI = $SCRIPT_ROOT+'/api/calc/hourly_rate';
+        self.drows = ko.observableArray();
+        self.total_hours = ko.observable();
+        self.total_pay = ko.observable();
+        self.ajax = function(uri, method, data) {
+            var localRequest = request;
+            localRequest.url = uri;
+            localRequest.method = method;
+            localRequest.data = data;
+            return $.ajax(localRequest);
+        }
+        self.calculate = function(values) {
+            self.ajax(self.calculationURI, 'GET', values).done(function(data) {
+                self.drows.removeAll();
+                for (var i=0;i<data.rows.length; i++) {
+                    self.drows.push({
+                            type  : ko.observable(data.rows[i].type   ),
+                            hours : ko.observable(data.rows[i].hours  ),
+                            pay   : ko.observable(data.rows[i].pay    ),
+                            rate  : ko.observable(data.rows[i].rate   ),
+                        });
+                }
+            });
+        }
+    }
+    var hrViewModel = new HRViewModel();
+    ko.applyBindings(hrViewModel, $('#results_table')[0]);
+    $('.form-control').each(function() {
+        $(this).blur(function() {
+            values = {
+                hours_worked : $('input[name="hours_worked"]').val(),
+                hourly_rate  : $('input[name="hourly_rate"]').val(),
+            }
+            hrViewModel.calculate(values);
+        });
+    })
+
+});
+</script>
+{% endblock %}
+
+
+
 {% block content %}
 {% macro render_field(field) %}
 <div class="form-group">
@@ -29,40 +93,26 @@ Hours Worked
                     </h2>
                     <hr>
                     <div class="jumbotron">
-                    {% if entry %}
-                    <table class="table table-striped" >
-                    <tr>
-                        <th>Hr. Type</th>
-                        <th class="text-right">Hr/Pay   </th>
-                        <th class="text-right">Hours    </th>
-                        <th class="text-right">Paid     </th>
-                    </tr>
-                    <tr>
-                        <td>Regular</td>
-                        <td class="text-right">{{entry.regular['rate'] }}</td>
-                        <td class="text-right">{{entry.regular['hours']}}</td>
-                        <td class="text-right">{{entry.regular['pay']  }}</td>
-                    </tr>
-                    <tr>
-                        <td>Overtime</td>
-                        <td class="text-right">{{entry.overtime['rate']}}</td>
-                        <td class="text-right">{{entry.overtime['hours']}}</td>
-                        <td class="text-right">{{entry.overtime['pay']}}</td>
-                    </tr>
-                    <tr>
-                        <td>Double time</td>
-                        <td class="text-right">{{entry.doubletime['rate']}}</td>
-                        <td class="text-right">{{entry.doubletime['hours']}}</td>
-                        <td class="text-right">{{entry.doubletime['pay']}}</td>
-                    </tr>
-                    <tr>
-                        <td>Total</td>
-                        <td></td>
-                        <td class="text-right">{{entry.total['hours']}}</td>
-                        <td class="text-right">{{entry.total['pay']}}</td>
-                    </tr>
+                    
+                    <table id="results_table" class="table table-striped" >
+                        <tbody>
+                            <tr>
+                                <th>Hr. Type</th>
+                                <th class="text-right">Hr/Pay   </th>
+                                <th class="text-right">Hours    </th>
+                                <th class="text-right">Paid     </th>
+                            </tr>
+                            <!-- ko foreach: drows -->
+                            <tr>
+                                <td data-bind="text : type"  style="text-transform:capitalize">Type</td>
+                                <td data-bind="text : rate"  class="text-right">{#entry.regular['rate'] #}</td>
+                                <td data-bind="text : hours" class="text-right">{#entry.regular['hours']#}</td>
+                                <td data-bind="text : pay"   class="text-right">{#entry.regular['pay']  #}</td>
+                            </tr>
+                            <!-- /ko -->
+                        </tbody>
                     </table>
-                    {% endif %}
+                    
           </div>
           
 <form method="POST" action="{{ url_for('hourly_rate') }}" enctype="multipart/form-data">

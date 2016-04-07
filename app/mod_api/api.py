@@ -33,6 +33,9 @@ parser.add_argument('guaranteed_rate', type=inputs.regex('^[0-9]+$'))
 parser.add_argument('guaranteed_hours', type=inputs.regex('^[0-9]+$'))
 parser.add_argument('actual_hours_worked', type=inputs.regex('^[0-9]+$'))
 
+# for cache = false in ajax get request object (get's around IE's caching)
+parser.add_argument('_', type=str)
+
 
 # Calling parse_args with strict=True ensures that an error is thrown if
 # the request includes arguments your parser does not define.
