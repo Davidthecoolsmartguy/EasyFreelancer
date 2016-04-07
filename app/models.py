@@ -23,10 +23,10 @@ class User(db.Model, UserMixin):
     confirmed_at = db.Column(db.DateTime())
     roles = db.relationship('Role', secondary=roles_users,
                             backref=db.backref('users', lazy='dynamic'))
-    pdf_location = db.relationship('pdf_location', backref='users',
+    invoices = db.relationship('InvoiceDocument', backref='user',
                                 lazy='dynamic')
 
 
-class pdf_location(db.Model)
+class InvoiceDocument(db.Model)
     id = db.Column(db.Integer, db.ForeignKey('User.id'))
-    pdf_location = db.Column(db.string(255),unique=False)
+    name = db.Column(db.string(255),unique=False)
