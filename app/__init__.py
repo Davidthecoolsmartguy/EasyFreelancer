@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request,flash
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.security import Security, SQLAlchemyUserDatastore, \
     UserMixin, RoleMixin, login_required
@@ -38,11 +38,11 @@ def create_app():
 
     # # Create a user to test with
     @app.before_first_request
-    #def create_user():
-    #   db.create_all()
-    #   #user_datastore.create_user(email='matt@nobien.net', password='password')
-    #   user_datastore.create_user(email='8arcena@gmail.com', password='admin')
-    #   db.session.commit()
+    def create_user():
+      db.create_all()
+      #user_datastore.create_user(email='matt@nobien.net', password='password')
+      # user_datastore.create_user(email='test', password='admin')
+      db.session.commit()
 
     @app.route('/')
     @login_required
@@ -50,7 +50,7 @@ def create_app():
         return render_template('pickoption.html')
 
 
-   @app.route('/hourly_rate',methods=['GET','POST'])
+    @app.route('/hourly_rate',methods=['GET','POST'])
     @login_required
     def hourly_rate():
         form = HourlyRateForm(request.form)
