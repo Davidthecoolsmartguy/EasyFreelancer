@@ -121,19 +121,27 @@ $(function() {
                             </tr>
                         </tbody>
                     </table>
+                    <!-- flash python messages -->
+                    <div class="flashes">
+                        {% for message in get_flashed_messages() %}
+                        {{ message }}
+                        {% endfor %}
+                    </div>
+                    <!--  end flash python  messages -->
                     
           </div>
           
-<form method="POST" action="{{ url_for('hourly_rate') }}" enctype="multipart/form-data">
+
+            <form method="POST" action="{{ url_for('hourly_rate') }}" enctype="multipart/form-data">
                 {{ form.csrf_token }}
 				{{ macros.render_field(form.hours_worked,  class="form-control", autocomplete="off") }}
 				{{ macros.render_field(form.hourly_rate,   class="form-control", autocomplete="off") }}
                 <button type="button" class="btn btn-default pull-left" name="calculate">Calculate</button>
                 {{ macros.render_field(form.submit,        class="btn btn-primary pull-right") }}
-		
+                {{ render_field(form.save_invoice,   class="form-control", autocomplete="off") }}
+        
 
-			</form>
-                
+            </form>
                  
                 </div>
             
