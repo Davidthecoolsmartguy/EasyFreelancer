@@ -1,6 +1,6 @@
 {% macro render_field(field) %}
 <div class="form-group">
-	{% if field.name != "submit" %}
+	{% if field.name != "submit" and field.name != "save_invoice" %}
 	    {{ field.label }}
         {{ field(**kwargs)|safe }}   
     {% else %}
