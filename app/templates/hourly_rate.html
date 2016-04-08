@@ -112,19 +112,25 @@ $(function() {
                             <!-- /ko -->
                         </tbody>
                     </table>
+                                      <!-- flash python messages -->
+                    <div class="flashes">
+                        {% for message in get_flashed_messages() %}
+                        {{ message }}
+                        {% endfor %}
+                    </div>
+                    <!--  end flash python  messages -->
                     
           </div>
           
-<form method="POST" action="{{ url_for('hourly_rate') }}" enctype="multipart/form-data">
-                {{ form.csrf_token }}
-				{{ render_field(form.hours_worked,  class="form-control", autocomplete="off") }}
-				{{ render_field(form.hourly_rate,   class="form-control", autocomplete="off") }}
-				{{ render_field(form.submit,        class="form-control", autocomplete="off") }}
-
-		
-
-			</form>
-                
+ <form method="POST" action="{{ url_for('hourly_rate') }}" enctype="multipart/form-data">
+                    {{ form.csrf_token }}
+                    {{ render_field(form.hours_worked,  class="form-control", autocomplete="off") }}
+                    {{ render_field(form.hourly_rate,   class="form-control", autocomplete="off") }}
+                    {{ render_field(form.submit,        class="form-control", autocomplete="off") }}
+                    {{ render_field(form.save_invoice,   class="form-control", autocomplete="off") }}
+                    
+                    
+                </form>
                  
                 </div>
             
