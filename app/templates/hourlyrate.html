@@ -35,6 +35,10 @@ $(function() {
             return $.ajax(localRequest);
         }
         self.calculate = function(values) {
+            values = {
+                hours_worked : $('input[name="hours_worked"]').val(),
+                hourly_rate  : $('input[name="hourly_rate"]').val(),
+            }
             self.ajax(self.calculationURI, 'GET', values).done(function(data) {
                 self.drows.removeAll();
                 for (var i=0;i<data.rows.length; i++) {
@@ -45,40 +49,40 @@ $(function() {
                             rate  : ko.observable(data.rows[i].rate   ),
                         });
                 }
+                self.total_hours(data.total_hours);
+                self.total_pay(data.total_pay);
             });
         }
     }
     var hrViewModel = new HRViewModel();
     ko.applyBindings(hrViewModel, $('#results_table')[0]);
+    $('input[name="calculate"]').click(function() {
+        hrViewModel.calculate();
+    });
     $('.form-control').each(function() {
         $(this).blur(function() {
-            values = {
-                hours_worked : $('input[name="hours_worked"]').val(),
-                hourly_rate  : $('input[name="hourly_rate"]').val(),
-            }
-            hrViewModel.calculate(values);
+            hrViewModel.calculate();
         });
-    })
+    });
+    $(document).on('keyup keypress', 'form input[type="text"]', function(e) {
+      if(e.keyCode == 13) {
+        e.preventDefault();
+        return false;
+      }
+    });
 
 });
 </script>
+<style>
+.line-at-top {
+    border-top:2px solid #333333 !important;
+}
+</style>
 {% endblock %}
 
 
 
 {% block content %}
-{% macro render_field(field) %}
-<div class="form-group">
-    {% if field.name != "submit" %}
-        {{ field.label }}
-        {{ field(**kwargs)|safe }}   
-    {% else %}
-       {{ field(class="btn btn-primary") }}
-    {% endif %}
-</div>
-{% endmacro %}
-
-
     <div class="container">
 
         
@@ -110,6 +114,11 @@ $(function() {
                                 <td data-bind="text : pay"   class="text-right">{#entry.regular['pay']  #}</td>
                             </tr>
                             <!-- /ko -->
+                            <tr>
+                                <th colspan="2"                   class="line-at-top text-right">Total</th>
+                                <td data-bind="text :total_hours" class="line-at-top text-right"></td>
+                                <td data-bind="text :total_pay"   class="line-at-top text-right"></td>
+                            </tr>
                         </tbody>
                     </table>
                     
@@ -117,10 +126,10 @@ $(function() {
           
 <form method="POST" action="{{ url_for('hourly_rate') }}" enctype="multipart/form-data">
                 {{ form.csrf_token }}
-				{{ render_field(form.hours_worked,  class="form-control", autocomplete="off") }}
-				{{ render_field(form.hourly_rate,   class="form-control", autocomplete="off") }}
-				{{ render_field(form.submit,        class="form-control", autocomplete="off") }}
-
+				{{ macros.render_field(form.hours_worked,  class="form-control", autocomplete="off") }}
+				{{ macros.render_field(form.hourly_rate,   class="form-control", autocomplete="off") }}
+                <button type="button" class="btn btn-default pull-left" name="calculate">Calculate</button>
+                {{ macros.render_field(form.submit,        class="btn btn-primary pull-right") }}
 		
 
 			</form>

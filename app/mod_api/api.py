@@ -48,7 +48,7 @@ class Calculation(Resource):
 		args = parser.parse_args(strict = True)
 		if calculation_type == 'hourly_rate':
 			entry = FreelanceEntry(
-				hourly_rate = args['hours_worked'],
+				hourly_rate = args['hourly_rate'],
                 hours = args['hours_worked'],
                 ) 
 		elif calculation_type == 'guaranteed_hours':
