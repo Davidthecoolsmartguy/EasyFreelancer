@@ -50,17 +50,31 @@ def create_app():
         return render_template('pickoption.html')
 
 
-    @app.route('/hourlyrate',methods=['GET','POST'])
+   @app.route('/hourly_rate',methods=['GET','POST'])
     @login_required
     def hourly_rate():
         form = HourlyRateForm(request.form)
         entry = None
-        if form.validate_on_submit():
-            entry = FreelanceEntry(
+        if request.method == 'POST':
+
+            if form.validate_on_submit():
+                entry = FreelanceEntry(
                 hourly_rate = form.hours_worked.data,
                 hours = form.hours_worked.data,
                 )
-        return render_template('hourlyrate.html',form = form, entry=entry)
+                if "submit" in  request.form:
+                    flash("button 1 was pressed")
+                    return render_template('hourly_rate.html', form=form, entry=entry) 
+
+                if "save_invoice" in request.form:
+                    flash("Data Saved ")
+                    return render_template('hourly_rate.html', form=form, entry=entry) 
+            else:
+                flash("Fill Out both fields")   
+                return render_template('hourly_rate.html', form=form, entry=entry) 
+    
+        elif request.method == 'GET':
+            return render_template('hourly_rate.html', form=form, entry=entry)  
 
 
 
