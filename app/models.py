@@ -23,13 +23,20 @@ class User(db.Model, UserMixin):
     confirmed_at = db.Column(db.DateTime())
     roles = db.relationship('Role', secondary=roles_users,
                             backref=db.backref('users', lazy='dynamic'))
-    invoices = db.relationship('InvoiceDocument', backref='person',
+    invoices = db.relationship('invoice_document', backref='users ',
                                 lazy='dynamic')
-    
+   
 
 
-class InvoiceDocument(db.Model):
+class invoice_document(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    parent_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    name = db.Column(db.String(50))
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    option_selected = db.Column(db.String(50))
+    guranteed_rate  = db.Column(db.String(50))
+    guranteed_hours = db.Column(db.String(50))
+    actual_hours_worked = db.Column(db.String(50))
+    hourly_rate = db.Column(db.String(50))
+    hours = db.Column(db.String(50))
+    creation_date = db.Column(db.String(50))
+
    
