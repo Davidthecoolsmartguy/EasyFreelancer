@@ -1,13 +1,10 @@
 #EasyFreelancer
 
-###### Contributors
-* David Gonzalez `Programmer`
-* Jimmy Xiloj `Audio Engineer`
+######  Main Contributors
+* David Gonzalez `Project Manger`
+* Jimmy Xiloj `Lead Audio Engineer`
 * Francisco Barcena `Lead Developer`
 
-
-###### TODO
-* Calculator API
 
 You will need a running postgress database
 `sudo apt-get install postgresql`
