@@ -37,7 +37,9 @@ def create_app():
 
     # Import modules here
     from app.mod_api.api import api_mod as api_module
+    from app.mod_crew.controllers import crew_mod as crew_module
     app.register_blueprint(api_module)
+    app.register_blueprint(crew_module)
 
     # Views
 
@@ -45,8 +47,8 @@ def create_app():
     @app.before_first_request
     def create_user():
       db.create_all()
-      user_datastore.create_user(email='matt@nobien.net', password='password')
-      user_datastore.create_user(email='test', password='admin')
+      #user_datastore.create_user(email='matt@nobien.net', password='password')
+      #user_datastore.create_user(email='test', password='admin')
       db.session.commit()
 
     @app.route('/')

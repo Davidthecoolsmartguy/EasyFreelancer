@@ -4,17 +4,24 @@ from flask.ext.security import Security, SQLAlchemyUserDatastore, \
 
 db = SQLAlchemy()
 
+class Base(db.Model):
+    __abstract__ = True
+    id              = db.Column(db.Integer, primary_key=True)
+    date_create     = db.Column(db.DateTime, default=db.func.current_timestamp())
+    date_modified   = db.Column(db.DateTime, default=db.func.current_timestamp(),
+                                            onupdate = db.func.current_timestamp()) 
+
 # Define models
 roles_users = db.Table('roles_users',
         db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
         db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
 
-class Role(db.Model, RoleMixin):
+class Role(Base, RoleMixin):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
 
-class User(db.Model, UserMixin):
+class User(Base, UserMixin):
      
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), unique=True)
@@ -28,7 +35,7 @@ class User(db.Model, UserMixin):
    
 
 
-class InvoiceDocument(db.Model):
+class InvoiceDocument(Base):
     id = db.Column(db.Integer, primary_key=True)
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     option_selected = db.Column(db.String(50))
