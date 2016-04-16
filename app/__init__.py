@@ -33,7 +33,7 @@ def create_app():
 
 
     # importmore Moules here
-    from models import invoice_document
+    from models import InvoiceDocument
 
     # Import modules here
     from app.mod_api.api import api_mod as api_module
@@ -73,7 +73,7 @@ def create_app():
 
                 if "save_invoice" in request.form:
                     flash("Data Saved ")
-                    invoice_saved=invoice_document(option_selected="hourly_rate",hours=form.hours_worked.data,hourly_rate=form.hourly_rate.data,creation_date=timenow)
+                    invoice_saved=InvoiceDocument(option_selected="hourly_rate",hours=form.hours_worked.data,hourly_rate=form.hourly_rate.data,creation_date=timenow)
                     db.session.add(invoice_saved)
                     db.session.commit()
                     return render_template('hourly_rate.html', form=form, entry=entry) 

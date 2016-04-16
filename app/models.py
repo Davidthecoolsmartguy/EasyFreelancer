@@ -28,7 +28,7 @@ class User(db.Model, UserMixin):
    
 
 
-class invoice_document(db.Model):
+class InvoiceDocument(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     option_selected = db.Column(db.String(50))
