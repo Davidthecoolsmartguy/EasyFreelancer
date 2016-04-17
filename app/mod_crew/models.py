@@ -2,7 +2,8 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.security import Security, SQLAlchemyUserDatastore, \
     UserMixin, RoleMixin, login_required
 
-db = SQLAlchemy()
+from ..models import db
+# db = SQLAlchemy()
 
 class Base(db.Model):
     __abstract__ = True
@@ -13,14 +14,13 @@ class Base(db.Model):
 class Production(Base):
 	name = db.Column(db.String(128))
 	description = db.Column(db.String(255))
-
+	time_cards = db.relationship('CrewTimeCard', backref="production")
 
 class CrewTimeCard(Base):
 	production_id = db.Column(db.Integer, db.ForeignKey('production.id'))
-	production = db.relationship('Production', backref="timecards", lazy="dynamic")
-
+	
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-	user = db.relationship('User', backref="timecards", lazy="dynamic")
+	user = db.relationship('User', backref="timecards")
 
 	comments = db.Column(db.String(255))
 
@@ -38,6 +38,8 @@ class CardLine(db.Model):
 class Timestamp(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 
+	card_line_id = db.Column(db.Integer, db.ForeignKey('card_line.id'))
+
 	type_id = db.Column(db.Integer, db.ForeignKey('timestamp_type.id'))
 	type = db.relationship('TimestampType')
 
@@ -49,6 +51,8 @@ class TimestampType(db.Model):
 
 class HourCount(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
+	card_line_id = db.Column(db.Integer, db.ForeignKey('card_line.id'))	
+	
 	type_id = db.Column(db.Integer, db.ForeignKey('hour_type.id'))
 	type = db.relationship('HourType')
 	amount = db.Column(db.Float())

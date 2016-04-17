@@ -12,7 +12,7 @@ timenow = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
-def create_app():
+def create_app(): 
     # Create app
     app = Flask(__name__)
     mail = Mail(app)

@@ -2,6 +2,8 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.security import Security, SQLAlchemyUserDatastore, \
     UserMixin, RoleMixin, login_required
 
+
+
 db = SQLAlchemy()
 
 class Base(db.Model):
@@ -30,7 +32,7 @@ class User(Base, UserMixin):
     confirmed_at = db.Column(db.DateTime())
     roles = db.relationship('Role', secondary=roles_users,
                             backref=db.backref('users', lazy='dynamic'))
-    invoices = db.relationship('invoice_document', backref='users ',
+    invoices = db.relationship('InvoiceDocument', backref='users ',
                                 lazy='dynamic')
    
 
